@@ -7,7 +7,7 @@
 <body>
     <div id="completionChart"></div>
     <h2></h2>
-    <div id="upcaseChart"></div>
+    <div id="upcasechart"></div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -46,6 +46,9 @@ function completionData(data)
                     enableMouseTracking: false
                 }
             },
+            lang :{
+                noData : "No data available."
+            },
             series: [{
                 name: 'Weeks',
                 data:  curve
@@ -72,7 +75,7 @@ function upcaseData(data){
     var weeks =  $.map(data[0].x, function(value, index) {return [value[0]];});
     var curve =  $.map(data[0].y, function(value, index) {return [value[0]];});
     var title ="Upcase retention curve";
-    const chart2 = Highcharts.chart('upcaseChart', {
+    const chart2 = Highcharts.chart('upcasechart', {
             chart: {
                 type: 'line'
             },
@@ -97,6 +100,9 @@ function upcaseData(data){
                     },
                     enableMouseTracking: false
                 }
+            },
+            lang :{
+                noData : "No data available."
             },
             series: [{
                 name: 'Weeks',
