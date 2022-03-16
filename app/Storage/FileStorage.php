@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Log;
 
 class FileStorage implements StorageInterface
 {
-    private $dataCollection;
+    private $dataCollection = [];
+    private $status = false;
+    private $feedStatus = false;
     public function __construct()
     {
         $collection = [];
@@ -19,10 +21,13 @@ class FileStorage implements StorageInterface
                 }
                 fclose($open);
             }
+            $this->status = true;
+            $this->feedStatus = true;
             $this->dataCollection = $collection;
         } catch (\Exception $e) {
-            // Log errors
-            //Log::error($e->getMessage());
+            $this->status = false;
+            $this->feedStatus = false;
+            $this->dataCollection  = $collection;
         }
     }
 
@@ -36,13 +41,29 @@ class FileStorage implements StorageInterface
         return response()->json([$this->upcaseData($this->dataCollection)], 200);
     }
 
+    public function dataFeedValidation()
+    {
+        if ($this->status) {
+            if($this->feedStatus){
+                return response()->json(['status' => 1, 'message' => 'Good to go'], 200);
+            }
+            else {
+                return response()->json(['status' => 0, 'message' => 'Invalid data format given ,please check your data feed.'], 200);
+            }
+           
+        }
+         else {
+            return response()->json(['status' => 0, 'message' => 'CSV file not available. Please check your data sources'], 200);
+        }
+    }
+
     private function weeklyData($data)
     {
+        $groupedData = [];
+        $collection = [];
+        $weekList = [];
+        $count = 0;
         try {
-            $groupedData = [];
-            $collection = [];
-            $weekList = [];
-            $count = 0;
             for ($i = 1; $i < count($data); $i++) {
                 $startDay = Carbon::parse($data[$i][1])->startOfWeek()->format('Y-m-d');
                 $endDay = Carbon::parse($data[$i][1])->endOfWeek()->format('Y-m-d');
@@ -67,20 +88,22 @@ class FileStorage implements StorageInterface
             }
             $collection['x'] = $weekList;
             $collection['y'] = $groupedData;
+            $this->feedStatus = true;
             return $collection;
         } catch (\Exception $e) {
-            // Log errors
-            //Log::error($e->getMessage());
+            $this->feedStatus = false;
+            return $collection;
         }
     }
 
-    public static function upcaseData($data)
+    private function upcaseData($data)
     {
+        $groupedData = [];
+        $collection = [];
+        $weekList = [];
+        $count = 0;
         try {
-            $groupedData = [];
-            $collection = [];
-            $weekList = [];
-            $count = 0;
+
             for ($i = 1; $i < count($data); $i++) {
 
                 $startDay = Carbon::parse($data[$i][1])->startOfWeek()->format('Y-m-d');
@@ -103,11 +126,11 @@ class FileStorage implements StorageInterface
             }
             $collection['x'] = $weekList;
             $collection['y'] = $groupedData;
+            $this->feedStatus = true;
             return $collection;
-            
         } catch (\Exception $e) {
-            // Log errors
-            //Log::error($e->getMessage());
+            $this->feedStatus = false;
+            return $collection;
         }
     }
 }

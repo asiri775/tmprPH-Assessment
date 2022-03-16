@@ -14,11 +14,13 @@ class CurveDataTest extends TestCase
      * @return void
      */
 
-    public function test_curve_data()
+    public function test_curve_Data()
     {
         $response = $this->getJson('/api/charts/weeklyData');
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+        ->dump(); 
         $response = $this->getJson('/api/charts/upcaseData');
         $response->assertStatus(200);
     }
+
 }
