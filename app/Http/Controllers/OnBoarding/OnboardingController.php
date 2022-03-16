@@ -21,10 +21,15 @@ class OnboardingController extends Controller
         return $this->storage->getUpScaleRetention();
     }
 
+    public function dataValidation(){
+        return $this->storage->dataFeedValidation();
+    }
+
 
     public function index()
     {
           return view('Onboarding/home');
     }
+
 
 }

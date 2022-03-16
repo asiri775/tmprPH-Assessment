@@ -17,4 +17,3 @@ use App\Http\Controllers\OnBoarding\OnboardingController;
  Route::get('/', [OnboardingController::class, 'index'])->name('onboarding.index');
 
 
-

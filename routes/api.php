@@ -18,3 +18,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/charts/weeklyData', [OnboardingController::class, 'weeklyData']);
 Route::get('/charts/upcaseData', [OnboardingController::class, 'upcaseData']);
+Route::get('/charts/dataValidation', [OnboardingController::class, 'dataValidation']);
